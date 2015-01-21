@@ -85,17 +85,15 @@ unreliability_function_failure_evaluate=0
 #
 #
 ####### write files
-def write_files(operation_time,failure_time,campaign,probability_density_function_evaluate,unreliability_function_evaluate,probability_density_function_failure_evaluate,failure_counter,failure_testing,operation_time_output,campaign_output,pdf_output,unreliability_function_output,failure_record_output,failure_time_output,pdf_failure_output):
+def write_files(time_domain,campaign,pdf_evaluate,cdf_evaluate,failure_counter,failure_testing,time_domain_output,campaign_output,pdf_output,cdf_output,failure_record_output):
 ###
-    operation_time_output.write(str.format('%.4f'%operation_time)+'\n')
-    campaign_output.write(str.format('%.4f'%operation_time)+'\t'+str.format('%i'%campaign)+'\n')
-    pdf_output.write(str.format('%.4f'%operation_time)+'\t'+str.format('%.4f'%probability_density_function_evaluate)+'\n')
-    unreliability_function_output.write(str.format('%.4f'%operation_time)+'\t'+str.format('%.4f'%unreliability_function_evaluate)+'\n')
-    failure_record_output.write(str.format('%.4f'%operation_time)+'\t'+str.format('%.4f'%failure_testing)+'\t'+str.format('%.4f'%unreliability_function_evaluate)+'\t'+str.format('%i'%failure_counter)+'\n')
-    failure_time_output.write(str.format('%.4f'%failure_time)+'\n')
-    pdf_failure_output.write(str.format('%.4f'%failure_time)+'\t'+str.format('%.4f'%probability_density_function_failure_evaluate)+'\n')
+    time_domain_output.write(str.format('%.4f'%time_domain)+'\n')
+    campaign_output.write(str.format('%.4f'%time_domain)+'\t'+str.format('%i'%campaign)+'\n')
+    pdf_output.write(str.format('%.4f'%time_domain)+'\t'+str.format('%.4f'%pdf_evaluate)+'\n')
+    unreliability_function_output.write(str.format('%.4f'%time_domain)+'\t'+str.format('%.4f'%cdf_evaluate)+'\n')
+    failure_record_output.write(str.format('%.4f'%time_domain)+'\t'+str.format('%.4f'%failure_testing)+'\t'+str.format('%.4f'%cdf_evaluate)+'\t'+str.format('%i'%failure_counter)+'\n')
 ###
-    return(operation_time_output,campaign_output,pdf_output,unreliability_function_output,failure_record_output,failure_time_output,pdf_failure_output)
+    return(time_domain_output,campaign_output,pdf_output,cdf_output,failure_record_output)
 #######
 #
 #
@@ -172,13 +170,13 @@ def unreliability_function(time_domain,weibull_beta,weibull_eta):
 #
 ####### open files 
 operation_time_output=open('operation.time.out','w+')
+failure_time_output=open('failure.time.out','w+')
 campaign_output=open('campaign.out','w+')
-pdf_output=open('pdf.out','w+')
+probability_density_function_output=open('pdf.out','w+')
 unreliability_function_output=open('unreliability.function.out','w+')
 failure_record_output=open('failure.record.out','w+')
-failure_time_output=open('failure.time.out','w+')
-pdf_failure_output=open('pdf.failure.out','w+')
-#unreliability_function_failure_output=open('unreliability.failure.function.out','w+')
+probability_density_function_failure_output=open('pdf.failure.out','w+')
+unreliability_function_failure_output=open('unreliability.failure.function.out','w+')
 #######
 #
 #
@@ -193,9 +191,7 @@ unreliability_function_evaluate=unreliability_function(operation_time,weibull_be
 probability_density_function_failure_evaluate=probability_density_function(failure_time,weibull_beta,weibull_eta)
 unreliability_function_failure_evaluate=unreliability_function(failure_time,weibull_beta,weibull_eta)
 ###
-operation_time_output,campaign_output,pdf_output,unreliability_function_output,failure_record_output,failure_time_output,pdf_failure_output=write_files(operation_time,failure_time,campaign,probability_density_function_evaluate,unreliability_function_evaluate,probability_density_function_failure_evaluate,failure_counter,failure_testing,operation_time_output,campaign_output,pdf_output,unreliability_function_output,failure_record_output,failure_time_output,pdf_failure_output)
-#pdf_failure_output.write(str.format('%.4f'%failure_time)+'\t'+str.format('%.4f'%probability_density_function)+'\n')
-#unreliability_function_failure_output.write(str.format('%.4f'%failure_time)+'\t'+str.format('%.4f'%unreliability_function)+'\n')
+operation_time_output,campaign_output,probability_density_function_output,unreliability_function_output,failure_record_output=write_files(operation_time,campaign,probability_density_function_evaluate,unreliability_function_evaluate,failure_counter,failure_testing,operation_time_output,campaign_output,probability_density_function_output,unreliability_function_output,failure_record_output)
 #######
 #
 #
@@ -212,10 +208,10 @@ while(operation_time<=facility_operation):
 ###
     probability_density_function_evaluate=probability_density_function(operation_time,weibull_beta,weibull_eta)
     unreliability_function_evaluate=unreliability_function(operation_time,weibull_beta,weibull_eta)
-    probability_density_function_failure_evaluate=probability_density_function(failure_time,weibull_beta,weibull_eta)
-    unreliability_function_failure_evaluate=unreliability_function(failure_time,weibull_beta,weibull_eta)
+#    probability_density_function_failure_evaluate=probability_density_function(failure_time,weibull_beta,weibull_eta)
+#    unreliability_function_failure_evaluate=unreliability_function(failure_time,weibull_beta,weibull_eta)
 ###
-    operation_time_output,campaign_output,pdf_output,unreliability_function_output,failure_record_output,failure_time_output,pdf_failure_output=write_files(operation_time,failure_time,campaign,probability_density_function_evaluate,unreliability_function_evaluate,probability_density_function_failure_evaluate,failure_counter,failure_testing,operation_time_output,campaign_output,pdf_output,unreliability_function_output,failure_record_output,failure_time_output,pdf_failure_output)
+    operation_time_output,campaign_output,probability_density_function_output,unreliability_function_output,failure_record_output=write_files(operation_time,campaign,probability_density_function_evaluate,unreliability_function_evaluate,failure_counter,failure_testing,operation_time_output,campaign_output,probability_density_function_output,unreliability_function_output,failure_record_output)
 ###
 #
 ### set random number for failure testing
@@ -231,15 +227,8 @@ while(operation_time<=facility_operation):
 ### end if
 #
 ###
-    print 'Operatiom time','%.4f'%operation_time
+    print 'Operation time','%.4f'%operation_time,'\t','Failure time','%.4f'%failure_time
     print 'Failure test generator','%.4f'%failure_testing,'\t','Failure probability','%.4f'%unreliability_function_evaluate,'\t','Failure?',failure_event,'\t','Total failures',failure_counter
-###
-#
-#    failure_record_output.write(str.format('%.4f'%operation_time)+'\t'+str.format('%.4f'%failure_testing)+'\t'+str.format('%.4f'%unreliability_function)+'\t'+str.format('%i'%failure_counter)+'\n')
-#    pdf_output.write(str.format('%.4f'%operation_time)+'\t'+str.format('%.4f'%probability_density_function)+'\n')
-#    pdf_failure_output.write(str.format('%.4f'%failure_time)+'\t'+str.format('%.4f'%probability_density_function)+'\n')
-#    unreliability_function_failure_output.write(str.format('%.4f'%failure_time)+'\t'+str.format('%.4f'%unreliability_function)+'\n')
-#    unreliability_function_output.write(str.format('%.4f'%operation_time)+'\t'+str.format('%.4f'%unreliability_function)+'\n')
 ###
 #
 ### resolve failure
@@ -254,7 +243,6 @@ while(operation_time<=facility_operation):
 	failure_event=False
 	probability_density_function_evaluate=probability_density_function(operation_time,weibull_beta,weibull_eta)
 	unreliability_function_evaluate=unreliability_function(operation_time,weibull_beta,weibull_eta)
-	operation_time_output,campaign_output,pdf_output,unreliability_function_output,failure_record_output,failure_time_output,pdf_failure_output=write_files(operation_time,failure_time,campaign,probability_density_function_evaluate,unreliability_function_evaluate,probability_density_function_failure_evaluate,failure_counter,failure_testing,operation_time_output,campaign_output,pdf_output,unreliability_function_output,failure_record_output,failure_time_output,pdf_failure_output)
 ### end failure loop
 #
 ###
@@ -271,12 +259,12 @@ while(operation_time<=facility_operation):
 ####### close files
 operation_time_output.close()
 campaign_output.close()
-pdf_output.close()
+probability_density_function_output.close()
 unreliability_function_output.close()
 failure_record_output.close()
 failure_time_output.close()
-pdf_failure_output.close()
-#unreliability_function_failure_output.close()
+probability_density_function_failure_output.close()
+unreliability_function_failure_output.close()
 #######
 #
 #
