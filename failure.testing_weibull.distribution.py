@@ -119,47 +119,45 @@ def unreliability_function(time_domain,weibull_beta,weibull_eta):
 #
 #
 ####### pdf plot
-#def plot_pdf(time_domain,failure_rate,plotdata):
+def plot_pdf(time_domain,failure_rate,facility_operation,plotdata):
 ###
-#fig,left_axis=plot.subplots()
-#title='Weibull pdf'
-#xtitle='Operation time'
-#ytitle='f(t)'
+fig,left_axis=plot.subplots()
+title='Weibull pdf'
+xtitle='Operation time'
+ytitle='f(t)'
 ###
-#plot.title(title)
-#left_axis.set_xlabel(xtitle)
-#left_axis.set_ylabel(ytitle)
+plot.title(title)
+left_axis.set_xlabel(xtitle)
+left_axis.set_ylabel(ytitle)
 ###
-#xmin=0
-#xmax=operation_time
-#ymin=-0.001 
-#ymax=failure_rate
+xmin=0
+xmax=time_domain
+ymin=-0.001 
+ymax=failure_rate
 ###
-#xmajortick=0.1*facility_operation
-#ymajortick=0.01
-#xminortick=0.25*xmajortick
-#yminortick=0.25*ymajortick
+xmajortick=0.1*facility_operation
+ymajortick=0.01
+xminortick=0.25*xmajortick
+yminortick=0.25*ymajortick
 ###
-#plot.xlim(xmin,xmax)
-#left_axis.axis(ymin=ymin,ymax=ymax)
+plot.xlim(xmin,xmax)
+left_axis.axis(ymin=ymin,ymax=ymax)
 ###
-#left_axis.xaxis.set_major_locator(MultipleLocator(xmajortick))
-#left_axis.yaxis.set_major_locator(MultipleLocator(ymajortick))
-#left_axis.xaxis.set_minor_locator(MultipleLocator(xminortick))
-#left_axis.yaxis.set_minor_locator(MultipleLocator(yminortick))
+left_axis.xaxis.set_major_locator(MultipleLocator(xmajortick))
+left_axis.yaxis.set_major_locator(MultipleLocator(ymajortick))
+left_axis.xaxis.set_minor_locator(MultipleLocator(xminortick))
+left_axis.yaxis.set_minor_locator(MultipleLocator(yminortick))
 ###
-#left_axis.tick_params(axis='both',which='major',direction='inout',length=7)
+left_axis.tick_params(axis='both',which='major',direction='inout',length=7)
 ###
-#left_axis.grid(which='major',axis='both',linewidth='1.1')
+left_axis.grid(which='major',axis='both',linewidth='1.1')
 ###
-#pdf_graph=numpy.loadtxt('pdf.out',dtype=float,delimiter='\t')
+left_axis.plot(plotdata[:,0],plotdata[:,1])
 ###
-#left_axis.plot(pdf_graph[:,0],pdf_graph[:,1])
-###
-#plot.get_current_fig_manager().resize(width,height)
-#plot.gcf().set_size_inches((0.01*width),(0.01*height))
-#plot.savefig(title)
-#plot.show()
+plot.get_current_fig_manager().resize(width,height)
+plot.gcf().set_size_inches((0.01*width),(0.01*height))
+plot.savefig(title)
+plot.show()
 #######
 #
 #
@@ -168,7 +166,7 @@ def unreliability_function(time_domain,weibull_beta,weibull_eta):
 operation_time_output=open('operation.time.out','w+')
 failure_time_output=open('failure.time.out','w+')
 campaign_output=open('campaign.out','w+')
-probability_density_function_output=open('pdf.out','w+')
+probability_density_function_output=open('probability.density.function.out','w+')
 unreliability_function_output=open('unreliability.function.out','w+')
 failure_record_output=open('failure.record.out','w+')
 probability_density_function_failure_output=open('pdf.failure.out','w+')
@@ -267,6 +265,13 @@ unreliability_function_failure_output.close()
 #
 #
 ####### prepare for plots
+pdf_graph=numpy.loadtxt('probability.density.function.out',dtype=float,delimiter='\t')
+#######
+#
+#
+#
+####### plots
+plot_pdf(time_domain,failure_rate,facility_operation,plotdata) # probability density function single curve
 #######
 #
 #
