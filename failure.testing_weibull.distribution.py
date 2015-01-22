@@ -1,7 +1,7 @@
 ########################################################################
 # R.A.Borrelli
 # @TheDoctorRAB 
-# rev.21.January.2015
+# rev.22.January.2015
 # v1.0
 ########################################################################
 #
@@ -164,9 +164,6 @@ def unreliability_function(time_domain,weibull_beta,weibull_eta):
 #
 #
 #
-#
-#
-#
 ####### open files 
 operation_time_output=open('operation.time.out','w+')
 failure_time_output=open('failure.time.out','w+')
@@ -221,7 +218,7 @@ while(operation_time<=facility_operation):
     if(failure_testing<=unreliability_function_evaluate):
 	failure_event=True
 	failure_counter+=1
-    else: 
+    else:
 	failure_event=False
 ### end if
 #
@@ -242,6 +239,7 @@ while(operation_time<=facility_operation):
 	failure_event=False
 	probability_density_function_evaluate=probability_density_function(operation_time,weibull_beta,weibull_eta)
 	unreliability_function_evaluate=unreliability_function(operation_time,weibull_beta,weibull_eta)
+	operation_time_output,campaign_output,probability_density_function_output,unreliability_function_output,failure_record_output=write_files(operation_time,campaign,probability_density_function_evaluate,unreliability_function_evaluate,failure_counter,failure_testing,operation_time_output,campaign_output,probability_density_function_output,unreliability_function_output,failure_record_output)
 ### end failure loop
 #
 ###
@@ -268,7 +266,10 @@ unreliability_function_failure_output.close()
 #
 #
 #
-# make a multi failure pdf, unreliability plot and a single pdf, unreliability plot
+####### prepare for plots
+#######
+#
+#
 #
 ########################################################################
 #
