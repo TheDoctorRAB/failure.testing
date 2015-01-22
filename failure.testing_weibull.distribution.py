@@ -118,9 +118,8 @@ def unreliability_function(time_domain,weibull_beta,weibull_eta):
 #
 #
 #
-#######
 ####### pdf plot
-#def plot_pdf(operation_time,failure_rate,plotdata):
+#def plot_pdf(time_domain,failure_rate,plotdata):
 ###
 #fig,left_axis=plot.subplots()
 #title='Weibull pdf'
