@@ -462,7 +462,7 @@ time_steps=len(pdf_graph)
 # 
 # to have multi curves for failure probabilities, the number of sets (time,probability) of curves = number of failures
 # the number of columns = 2*number of failures
-# the numbers of rows si unknown because the failure occurs at a random time
+# the numbers of rows is unknown because the failure occurs at a random time
 #
 ###
 #
