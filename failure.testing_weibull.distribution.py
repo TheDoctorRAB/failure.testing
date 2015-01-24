@@ -444,27 +444,12 @@ unreliability_function_failure_graph=numpy.loadtxt('unreliability.function.failu
 #
 #
 ####### plots
-#plot_pdf(operation_time,failure_rate,facility_operation,pdf_graph) # probability density function single curve
-#plot_cdf(operation_time,facility_operation,cdf_graph) # unreliability function single curve
-#plot_failure_record(operation_time,facility_operation,failure_counter,failure_record_graph) # number of failures over facility operation
-#plot_campaign(operation_time,facility_operation,campaign,campaign_graph)
+plot_pdf(operation_time,failure_rate,facility_operation,pdf_graph) # probability density function single curve
+plot_cdf(operation_time,facility_operation,cdf_graph) # unreliability function single curve
+plot_failure_record(operation_time,facility_operation,failure_counter,failure_record_graph) # number of failures over facility operation
+plot_campaign(operation_time,facility_operation,campaign,campaign_graph)
 #######
 #
-#
-#
-####### get time steps 
-time_steps=len(pdf_graph)
-#######
-#
-#
-#
-####### get number of rows,columns for multi probability curves
-# 
-# to have multi curves for failure probabilities, the number of sets (time,probability) of curves = number of failures
-# the number of columns = 2*number of failures
-# the numbers of rows is unknown because the failure occurs at a random time
-#
-###
 #
 #
 ########################################################################
