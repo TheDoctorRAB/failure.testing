@@ -1,7 +1,7 @@
 ########################################################################
 # R.A.Borrelli
 # @TheDoctorRAB 
-# rev.22.January.2015
+# rev.23.January.2015
 # v1.0
 ########################################################################
 #
@@ -85,15 +85,18 @@ unreliability_function_failure_evaluate=0
 #
 #
 ####### write files
-def write_files(time_domain,campaign,pdf_evaluate,cdf_evaluate,failure_counter,failure_testing,time_domain_output,campaign_output,pdf_output,cdf_output,failure_record_output):
+def write_files(operation_time,failure_time,campaign,probability_density_function_evaluate,unreliability_function_evaluate,probability_density_function_failure_evaluate,unreliability_function_failure_evaluate,failure_counter,failure_testing,operation_time_output,failure_time_output,campaign_output,probability_density_function_output,unreliability_function_output,probability_density_function_failure_output,unreliability_function_failure_output,failure_record_output):
 ###
-    time_domain_output.write(str.format('%.4f'%time_domain)+'\n')
-    campaign_output.write(str.format('%.4f'%time_domain)+'\t'+str.format('%i'%campaign)+'\n')
-    pdf_output.write(str.format('%.4f'%time_domain)+'\t'+str.format('%.4f'%pdf_evaluate)+'\n')
-    cdf_output.write(str.format('%.4f'%time_domain)+'\t'+str.format('%.4f'%cdf_evaluate)+'\n')
-    failure_record_output.write(str.format('%.4f'%time_domain)+'\t'+str.format('%.4f'%failure_testing)+'\t'+str.format('%.4f'%cdf_evaluate)+'\t'+str.format('%i'%failure_counter)+'\n')
+    operation_time_output.write(str.format('%.4f'%operation_time)+'\n')
+    failure_time_output.write(str.format('%.4f'%failure_time)+'\n')
+    campaign_output.write(str.format('%.4f'%operation_time)+'\t'+str.format('%i'%campaign)+'\n')
+    probability_density_function_output.write(str.format('%.4f'%operation_time)+'\t'+str.format('%.4f'%probability_density_function_evaluate)+'\n')
+    unreliability_function_output.write(str.format('%.4f'%operation_time)+'\t'+str.format('%.4f'%unreliability_function_evaluate)+'\n')
+    probability_density_function_failure_output.write(str.format('%.4f'%operation_time)+'\t'+str.format('%.4f'%failure_time)+'\t'+str.format('%.4f'%probability_density_function_failure_evaluate)+'\n')
+    unreliability_function_failure_output.write(str.format('%.4f'%operation_time)+'\t'+str.format('%.4f'%failure_time)+'\t'+str.format('%.4f'%unreliability_function_failure_evaluate)+'\n')
+    failure_record_output.write(str.format('%.4f'%operation_time)+'\t'+str.format('%.4f'%failure_testing)+'\t'+str.format('%.4f'%unreliability_function_evaluate)+'\t'+str.format('%i'%failure_counter)+'\n')
 ###
-    return(time_domain_output,campaign_output,pdf_output,cdf_output,failure_record_output)
+    return(operation_time_output,failure_time_output,campaign_output,probability_density_function_output,unreliability_function_output,probability_density_function_failure_output,unreliability_function_failure_output,failure_record_output)
 #######
 #
 #
@@ -123,7 +126,7 @@ def plot_pdf(time_domain,failure_rate,facility_operation,plotdata):
 ###
     fig,left_axis=plot.subplots()
     title='Weibull pdf'
-    xtitle='Operation time'
+    xtitle='Facility operation'
     ytitle='f(t)'
 ###
     plot.title(title)
@@ -132,7 +135,7 @@ def plot_pdf(time_domain,failure_rate,facility_operation,plotdata):
 ###
     xmin=0
     xmax=time_domain
-    ymin=-0.001 
+    ymin=0 
     ymax=failure_rate
 ###
     xmajortick=0.1*facility_operation
@@ -169,7 +172,7 @@ def plot_cdf(time_domain,facility_operation,plotdata):
 ###
     fig,left_axis=plot.subplots()
     title='Weibull unreliability function'
-    xtitle='Operation time'
+    xtitle='Facility operation'
     ytitle='Q(t)'
 ###
     plot.title(title)
@@ -178,8 +181,8 @@ def plot_cdf(time_domain,facility_operation,plotdata):
 ###
     xmin=0
     xmax=time_domain
-    ymin=-0.01
-    ymax=1.01
+    ymin=0
+    ymax=1
 ###
     xmajortick=0.1*facility_operation
     ymajortick=0.05
@@ -210,6 +213,94 @@ def plot_cdf(time_domain,facility_operation,plotdata):
 #
 #
 #
+####### failure record plot
+def plot_failure_record(time_domain,facility_operation,failure_counter,plotdata):
+###
+    fig,left_axis=plot.subplots()
+    title='Failure record'
+    xtitle='Facility operation'
+    ytitle='Failures'
+###
+    plot.title(title)
+    left_axis.set_xlabel(xtitle)
+    left_axis.set_ylabel(ytitle)
+###
+    xmin=0
+    xmax=time_domain
+    ymin=-0.05
+    ymax=failure_counter+0.05
+###
+    xmajortick=0.1*facility_operation
+    ymajortick=1
+    xminortick=0.25*xmajortick
+###
+    plot.xlim(xmin,xmax)
+    left_axis.axis(ymin=ymin,ymax=ymax)
+###
+    left_axis.xaxis.set_major_locator(MultipleLocator(xmajortick))
+    left_axis.yaxis.set_major_locator(MultipleLocator(ymajortick))
+    left_axis.xaxis.set_minor_locator(MultipleLocator(xminortick))
+###
+    left_axis.tick_params(axis='both',which='major',direction='inout',length=7)
+###
+    left_axis.grid(which='major',axis='both',linewidth='1.1')
+###
+    left_axis.plot(plotdata[:,0],plotdata[:,3])
+###
+    plot.get_current_fig_manager().resize(width,height)
+    plot.gcf().set_size_inches((0.01*width),(0.01*height))
+    plot.savefig(title)
+    plot.show()
+###
+    return()
+#######
+#
+#
+#
+####### campaign plot
+def plot_campaign(time_domain,facility_operation,campaign,plotdata):
+###
+    fig,left_axis=plot.subplots()
+    title='Processing campaigns'
+    xtitle='Facility operation'
+    ytitle='Campaigns'
+###
+    plot.title(title)
+    left_axis.set_xlabel(xtitle)
+    left_axis.set_ylabel(ytitle)
+###
+    xmin=0
+    xmax=time_domain
+    ymin=0.95 
+    ymax=campaign+0.05
+###
+    xmajortick=0.1*facility_operation
+    ymajortick=1
+    xminortick=0.25*xmajortick
+###
+    plot.xlim(xmin,xmax)
+    left_axis.axis(ymin=ymin,ymax=ymax)
+###
+    left_axis.xaxis.set_major_locator(MultipleLocator(xmajortick))
+    left_axis.yaxis.set_major_locator(MultipleLocator(ymajortick))
+    left_axis.xaxis.set_minor_locator(MultipleLocator(xminortick))
+###
+    left_axis.tick_params(axis='both',which='major',direction='inout',length=7)
+###
+    left_axis.grid(which='major',axis='both',linewidth='1.1')
+###
+    left_axis.plot(plotdata[:,0],plotdata[:,1])
+###
+    plot.get_current_fig_manager().resize(width,height)
+    plot.gcf().set_size_inches((0.01*width),(0.01*height))
+    plot.savefig(title)
+    plot.show()
+###
+    return()
+#######
+#
+#
+#
 ####### open files 
 operation_time_output=open('operation.time.out','w+')
 failure_time_output=open('failure.time.out','w+')
@@ -217,8 +308,8 @@ campaign_output=open('campaign.out','w+')
 probability_density_function_output=open('probability.density.function.out','w+')
 unreliability_function_output=open('unreliability.function.out','w+')
 failure_record_output=open('failure.record.out','w+')
-probability_density_function_failure_output=open('pdf.failure.out','w+')
-unreliability_function_failure_output=open('unreliability.failure.function.out','w+')
+probability_density_function_failure_output=open('probability.density.function.failure.out','w+')
+unreliability_function_failure_output=open('unreliability.function.failure.out','w+')
 #######
 #
 #
@@ -233,9 +324,7 @@ unreliability_function_evaluate=unreliability_function(operation_time,weibull_be
 probability_density_function_failure_evaluate=probability_density_function(failure_time,weibull_beta,weibull_eta)
 unreliability_function_failure_evaluate=unreliability_function(failure_time,weibull_beta,weibull_eta)
 ###
-operation_time_output,campaign_output,probability_density_function_output,unreliability_function_output,failure_record_output=write_files(operation_time,campaign,probability_density_function_evaluate,unreliability_function_evaluate,failure_counter,failure_testing,operation_time_output,campaign_output,probability_density_function_output,unreliability_function_output,failure_record_output)
-###
-failure_time_output,campaign_output,probability_density_function_failure_output,unreliability_function_failure_output,failure_record_output=write_files(failure_time,campaign,probability_density_function_failure_evaluate,unreliability_function_failure_evaluate,failure_counter,failure_testing,failure_time_output,campaign_output,probability_density_function_failure_output,unreliability_function_failure_output,failure_record_output)
+operation_time_output,failure_time_output,campaign_output,probability_density_function_output,unreliability_function_output,probability_density_function_failure_output,unreliability_function_failure_output,failure_record_output=write_files(operation_time,failure_time,campaign,probability_density_function_evaluate,unreliability_function_evaluate,probability_density_function_failure_evaluate,unreliability_function_failure_evaluate,failure_counter,failure_testing,operation_time_output,failure_time_output,campaign_output,probability_density_function_output,unreliability_function_output,probability_density_function_failure_output,unreliability_function_failure_output,failure_record_output)
 #######
 #
 #
@@ -250,21 +339,22 @@ while(operation_time<=facility_operation):
     operation_time=operation_time+delta_time
     failure_time=failure_time+delta_time
 ###
-    probability_density_function_evaluate=probability_density_function(operation_time,weibull_beta,weibull_eta)
-    unreliability_function_evaluate=unreliability_function(operation_time,weibull_beta,weibull_eta)
-    probability_density_function_failure_evaluate=probability_density_function(failure_time,weibull_beta,weibull_eta)
-    unreliability_function_failure_evaluate=unreliability_function(failure_time,weibull_beta,weibull_eta)
+    if (operation_time<=facility_operation): # prevents duplicate output writing if the final campaign is not a fail
+	probability_density_function_evaluate=probability_density_function(operation_time,weibull_beta,weibull_eta)
+	unreliability_function_evaluate=unreliability_function(operation_time,weibull_beta,weibull_eta)
 ###
-    operation_time_output,campaign_output,probability_density_function_output,unreliability_function_output,failure_record_output=write_files(operation_time,campaign,probability_density_function_evaluate,unreliability_function_evaluate,failure_counter,failure_testing,operation_time_output,campaign_output,probability_density_function_output,unreliability_function_output,failure_record_output)
+        probability_density_function_failure_evaluate=probability_density_function(failure_time,weibull_beta,weibull_eta)
+	unreliability_function_failure_evaluate=unreliability_function(failure_time,weibull_beta,weibull_eta)
 ###
-    failure_time_output,campaign_output,probability_density_function_failure_output,unreliability_function_failure_output,failure_record_output=write_files(failure_time,campaign,probability_density_function_failure_evaluate,unreliability_function_failure_evaluate,failure_counter,failure_testing,failure_time_output,campaign_output,probability_density_function_failure_output,unreliability_function_failure_output,failure_record_output)
+	operation_time_output,failure_time_output,campaign_output,probability_density_function_output,unreliability_function_output,probability_density_function_failure_output,unreliability_function_failure_output,failure_record_output=write_files(operation_time,failure_time,campaign,probability_density_function_evaluate,unreliability_function_evaluate,probability_density_function_failure_evaluate,unreliability_function_failure_evaluate,failure_counter,failure_testing,operation_time_output,failure_time_output,campaign_output,probability_density_function_output,unreliability_function_output,probability_density_function_failure_output,unreliability_function_failure_output,failure_record_output)
+### end if
 #
 ### set random number for failure testing
 # the random number is sampled from the uniform distribution (0,1)
 # this is compared to the unreliability function to determine if a failure occurs
     failure_testing=numpy.random.rand()
 ###
-    if(failure_testing<=unreliability_function_evaluate):
+    if(failure_testing<=unreliability_function_failure_evaluate):
 	failure_event=True
 	failure_counter+=1
     else:
@@ -273,7 +363,7 @@ while(operation_time<=facility_operation):
 #
 ###
     print 'Operation time','%.4f'%operation_time,'\t','Failure time','%.4f'%failure_time
-    print 'Failure test generator','%.4f'%failure_testing,'\t','Failure probability','%.4f'%unreliability_function_evaluate,'\t','Failure?',failure_event,'\t','Total failures',failure_counter
+    print 'Failure test generator','%.4f'%failure_testing,'\t','Failure probability','%.4f'%unreliability_function_failure_evaluate,'\t','Failure?',failure_event,'\t','Total failures',failure_counter
 ###
 #
 ### resolve failure
@@ -285,34 +375,46 @@ while(operation_time<=facility_operation):
 	failure_time=0
 	operation_time=operation_time+maintenance_time
 ###
-	probability_density_function_failure_evaluate=probability_density_function(failure_time,weibull_beta,weibull_eta)
-	unreliability_function_failure_evaluate=unreliability_function(failure_time,weibull_beta,weibull_eta)
+	if (operation_time<=facility_operation): # prevents duplicate output writing if the final campaign is not a fail
+	    probability_density_function_evaluate=probability_density_function(operation_time,weibull_beta,weibull_eta)
+	    unreliability_function_evaluate=unreliability_function(operation_time,weibull_beta,weibull_eta)
+	    probability_density_function_failure_evaluate=probability_density_function(failure_time,weibull_beta,weibull_eta)
+	    unreliability_function_failure_evaluate=unreliability_function(failure_time,weibull_beta,weibull_eta)
 ###
-	failure_time_output,campaign_output,probability_density_function_failure_output,unreliability_function_failure_output,failure_record_output=write_files(failure_time,campaign,probability_density_function_failure_evaluate,unreliability_function_failure_evaluate,failure_counter,failure_testing,failure_time_output,campaign_output,probability_density_function_failure_output,unreliability_function_failure_output,failure_record_output)
+	    operation_time_output,failure_time_output,campaign_output,probability_density_function_output,unreliability_function_output,probability_density_function_failure_output,unreliability_function_failure_output,failure_record_output=write_files(operation_time,failure_time,campaign,probability_density_function_evaluate,unreliability_function_evaluate,probability_density_function_failure_evaluate,unreliability_function_failure_evaluate,failure_counter,failure_testing,operation_time_output,failure_time_output,campaign_output,probability_density_function_output,unreliability_function_output,probability_density_function_failure_output,unreliability_function_failure_output,failure_record_output)
+### end if
+#
 ###
-	failure_time=failure_time+maintenance_time
 	failure_event=False
 ###
-	probability_density_function_evaluate=probability_density_function(operation_time,weibull_beta,weibull_eta)
-	unreliability_function_evaluate=unreliability_function(operation_time,weibull_beta,weibull_eta)
-###
-	probability_density_function_failure_evaluate=probability_density_function(failure_time,weibull_beta,weibull_eta)
-	unreliability_function_failure_evaluate=unreliability_function(failure_time,weibull_beta,weibull_eta)
-##
-	operation_time_output,campaign_output,probability_density_function_output,unreliability_function_output,failure_record_output=write_files(operation_time,campaign,probability_density_function_evaluate,unreliability_function_evaluate,failure_counter,failure_testing,operation_time_output,campaign_output,probability_density_function_output,unreliability_function_output,failure_record_output)
-###
-	failure_time_output,campaign_output,probability_density_function_failure_output,unreliability_function_failure_output,failure_record_output=write_files(failure_time,campaign,probability_density_function_failure_evaluate,unreliability_function_failure_evaluate,failure_counter,failure_testing,failure_time_output,campaign_output,probability_density_function_failure_output,unreliability_function_failure_output,failure_record_output)
+#
 ### end failure loop
 #
 ###
     print 'End campaign:',campaign,'\n'
-    campaign+=1
+###
+#
+###
+    if(operation_time<=facility_operation):
+	campaign+=1
+### end if
+#
 ###
 print 'Final time','%.4f'%operation_time
-#
-#
+###
 #
 ####### end operation loop
+#
+#
+#
+####### final time
+probability_density_function_evaluate=probability_density_function(operation_time,weibull_beta,weibull_eta)
+unreliability_function_evaluate=unreliability_function(operation_time,weibull_beta,weibull_eta)
+probability_density_function_failure_evaluate=probability_density_function(failure_time,weibull_beta,weibull_eta)
+unreliability_function_failure_evaluate=unreliability_function(failure_time,weibull_beta,weibull_eta)
+###
+operation_time_output,failure_time_output,campaign_output,probability_density_function_output,unreliability_function_output,probability_density_function_failure_output,unreliability_function_failure_output,failure_record_output=write_files(operation_time,failure_time,campaign,probability_density_function_evaluate,unreliability_function_evaluate,probability_density_function_failure_evaluate,unreliability_function_failure_evaluate,failure_counter,failure_testing,operation_time_output,failure_time_output,campaign_output,probability_density_function_output,unreliability_function_output,probability_density_function_failure_output,unreliability_function_failure_output,failure_record_output)
+#######
 #
 #
 #
@@ -332,74 +434,37 @@ unreliability_function_failure_output.close()
 ####### prepare for plots
 pdf_graph=numpy.loadtxt('probability.density.function.out',dtype=float,delimiter='\t')
 cdf_graph=numpy.loadtxt('unreliability.function.out',dtype=float,delimiter='\t')
+failure_record_graph=numpy.loadtxt('failure.record.out',dtype=float,delimiter='\t')
+campaign_graph=numpy.loadtxt('campaign.out',dtype=float,delimiter='\t')
+operation_time_graph=numpy.loadtxt('operation.time.out',dtype=float)
+pdf_failure_graph=numpy.loadtxt('probability.density.function.failure.out',dtype=float,delimiter='\t')
+unreliability_function_failure_graph=numpy.loadtxt('unreliability.function.failure.out',dtype=float,delimiter='\t')
 #######
 #
 #
 #
 ####### plots
-plot_pdf(operation_time,failure_rate,facility_operation,pdf_graph) # probability density function single curve
-plot_cdf(operation_time,facility_operation,cdf_graph) # unreliability function single curve
+#plot_pdf(operation_time,failure_rate,facility_operation,pdf_graph) # probability density function single curve
+#plot_cdf(operation_time,facility_operation,cdf_graph) # unreliability function single curve
+#plot_failure_record(operation_time,facility_operation,failure_counter,failure_record_graph) # number of failures over facility operation
+#plot_campaign(operation_time,facility_operation,campaign,campaign_graph)
 #######
 #
 #
 #
-########################################################################
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#######
-
-#
-#
-#
-#
-#
-####### failure record plot
-#fig,left_axis=plot.subplots()
-#title='Failure record'
-#xtitle='Operation time'
-#ytitle='Failures'
-###
-#plot.title(title)
-#left_axis.set_xlabel(xtitle)
-#left_axis.set_ylabel(ytitle)
-###
-#xmin=0
-#xmax=operation_time
-#ymin=-0.03
-#ymax=failure_counter+0.03
-###
-#xmajortick=0.1*facility_operation
-#ymajortick=1
-#xminortick=0.25*xmajortick
-###
-#plot.xlim(xmin,xmax)
-#left_axis.axis(ymin=ymin,ymax=ymax)
-###
-#left_axis.xaxis.set_major_locator(MultipleLocator(xmajortick))
-#left_axis.yaxis.set_major_locator(MultipleLocator(ymajortick))
-#left_axis.xaxis.set_minor_locator(MultipleLocator(xminortick))
-###
-#left_axis.tick_params(axis='both',which='major',direction='inout',length=7)
-###
-#left_axis.grid(which='major',axis='both',linewidth='1.1')
-###
-#failure_record_graph=numpy.loadtxt('failure.record.out',dtype=float,delimiter='\t')
-###
-#left_axis.plot(failure_record_graph[:,0],failure_record_graph[:,3])
-###
-#plot.get_current_fig_manager().resize(width,height)
-#plot.gcf().set_size_inches((0.01*width),(0.01*height))
-#plot.savefig(title)
-#plot.show()
+####### get time steps 
+time_steps=len(pdf_graph)
 #######
 #
+#
+#
+####### get number of rows,columns for multi probability curves
+# 
+# to have multi curves for failure probabilities, the number of sets (time,probability) of curves = number of failures
+# the number of columns = 2*number of failures
+# the numbers of rows si unknown because the failure occurs at a random time
+#
+###
 #
 #
 ########################################################################
