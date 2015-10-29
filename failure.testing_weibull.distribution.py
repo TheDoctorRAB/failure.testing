@@ -1,7 +1,7 @@
 ########################################################################
 # R.A.Borrelli
 # @TheDoctorRAB 
-# rev.23.January.2015
+# rev.14.October.2015
 # v1.0
 ########################################################################
 #
@@ -44,14 +44,16 @@
 #
 ####### imports
 import numpy
+import sys
 import matplotlib
 import matplotlib.pyplot as plot
 from win32api import GetSystemMetrics
 from matplotlib.ticker import MultipleLocator
 ########################################################################
 #
+# diagnostics
 #
-#
+sys.stdout=open('log.txt','w+') # all the print statements will write to file
 ####### controls
 matplotlib.rcParams.update({'font.size': 14}) # set plot font
 width=GetSystemMetrics (0) # get screen resolution
